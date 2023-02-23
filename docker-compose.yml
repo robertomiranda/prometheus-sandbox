@@ -1,0 +1,27 @@
+version: '3.9'
+
+volumes:
+  prometheus_data: {}
+
+networks:
+  front-tier:
+  back-tier:
+
+
+services:
+
+  prometheus:
+    image: prom/prometheus:v2.36.2
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - 1234:9090
+    networks:
+      - back-tier
+    restart: always
